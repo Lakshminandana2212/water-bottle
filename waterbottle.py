@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-image_path = r"E:\waterbottledetector\waterbottle3.jpg" 
+# image_path = r"E:\waterbottledetector\waterbottle3.jpg" 
 
 img = cv2.imread(image_path)
 
