@@ -283,131 +283,131 @@
     </div>
 
     <script>
-        const uploadBtn = document.getElementById('upload-btn');
-        const fileInput = document.getElementById('image-upload-input');
-        const resultsContent = document.getElementById('results-content');
-        const imagePreviewContainer = document.getElementById('image-preview-container');
-        const uploadedImage = document.getElementById('uploaded-image');
-        const resetBtn = document.getElementById('reset-btn');
-        const resultsCard = document.getElementById('results-card');
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileInput = document.getElementById('image-upload-input');
+    const resultsContent = document.getElementById('results-content');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const uploadedImage = document.getElementById('uploaded-image');
+    const resetBtn = document.getElementById('reset-btn');
+    const resultsCard = document.getElementById('results-card');
 
-        uploadBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files?.[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    uploadedImage.src = e.target?.result;
-                    imagePreviewContainer.style.display = 'flex';
-                    resetResults(); // Optionally reset results on new image
-                };
-                reader.readAsDataURL(file);
-            } else {
-                hideImagePreview();
-            }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            fileInput.value = ''; // Clear the file input
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImage.src = e.target?.result;
+                imagePreviewContainer.style.display = 'flex';
+                resetResults(); // Optionally reset results on new image
+            };
+            reader.readAsDataURL(file);
+        } else {
             hideImagePreview();
-            resetResults();
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        fileInput.value = ''; // Clear the file input
+        hideImagePreview();
+        resetResults();
+    });
+
+    function hideImagePreview() {
+        uploadedImage.src = '#';
+        imagePreviewContainer.style.display = 'none';
+    }
+
+    function showAnalyzingState() {
+        resultsContent.innerHTML = `
+            <div class="results-placeholder">
+                <div class="icon-wrapper" style="animation: pulse 1.5s infinite;">
+                    <svg class="icon" style="width: 2rem; height: 2rem; color: var(--accent-blue);" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                </div>
+                <p style="color: var(--accent-blue); font-weight: 500;">Analyzing image...</p>
+            </div>
+            <style> @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } } </style>
+        `;
+    }
+
+    function showRealResult(data) {
+        if (data.status === 'Error') {
+            showErrorResult(data.message);
+            return;
+        }
+
+        const percentage = data.fill_percentage;
+        const reasoning = data.reasoning;
+        const hasWater = percentage > 5;
+
+        const resultColor = hasWater ? 'var(--accent-green)' : 'var(--accent-purple)';
+        const resultIcon = hasWater
+            ? `<svg class="icon" style="width: 2rem; height: 2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>`
+            : `<svg class="icon" style="width: 2rem; height: 2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+
+        resultsContent.innerHTML = `
+            <div style="text-align: center; color: ${resultColor}; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                ${resultIcon}
+                ${hasWater ? 'Water Detected!' : 'No Water Detected'}
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">Fill Level: ${percentage}%</p>
+            <p style="text-align: center; font-size: 0.875rem; color: var(--text-secondary); margin-top: 1rem; padding: 0.5rem; background-color: #f9fafb; border-radius: 0.5rem;"><b>Analysis:</b> ${reasoning}</p>
+        `;
+    }
+
+    function showErrorResult(message = 'Analysis failed. Please try again.') {
+        resultsContent.innerHTML = `
+             <div style="text-align: center; color: #e63946; font-weight: 700; font-size: 1.5rem;">
+                Error
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">${message}</p>
+        `;
+    }
+
+    function analyzeImage() {
+        const file = fileInput.files?.[0];
+        if (!file) {
+            alert('Please upload an image first.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        showAnalyzingState();
+
+        fetch('http://127.0.0.1:5000/analyze', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            showRealResult(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorResult();
         });
+    }
 
-        function hideImagePreview() {
-            uploadedImage.src = '#';
-            imagePreviewContainer.style.display = 'none';
-        }
-
-        function showAnalyzingState() {
-            resultsContent.innerHTML = `
-                <div class="results-placeholder">
-                    <div class="icon-wrapper" style="animation: pulse 1.5s infinite;">
-                        <svg class="icon" style="width: 2rem; height: 2rem; color: var(--accent-blue);" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
-                    </div>
-                    <p style="color: var(--accent-blue); font-weight: 500;">Analyzing image...</p>
+    function resetResults() {
+        resultsContent.innerHTML = `
+            <div class="results-placeholder">
+                <div class="icon-wrapper">
+                    <svg class="icon" style="width: 2rem; height: 2rem; color: #9ca3af;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
                 </div>
-                <style> @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } } </style>
-            `;
-        }
+                <p>Upload or capture an image to get started</p>
+            </div>
+        `;
+    }
 
-        function showRealResult(data) {
-            if (data.status === 'Error') {
-                showErrorResult(data.message);
-                return;
-            }
+    // Attach the analyzeImage function to the "Analyze" button (you'll need to add this button to your HTML)
+    // For now, let's trigger analysis automatically after image upload for simplicity
+    fileInput.addEventListener('change', analyzeImage);
 
-            const percentage = data.fill_percentage;
-            const reasoning = data.reasoning;
-            const hasWater = percentage > 5;
-
-            const resultColor = hasWater ? 'var(--accent-green)' : 'var(--accent-purple)';
-            const resultIcon = hasWater
-                ? `<svg class="icon" style="width: 2rem; height: 2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>`
-                : `<svg class="icon" style="width: 2rem; height: 2rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
-
-            resultsContent.innerHTML = `
-                <div style="text-align: center; color: ${resultColor}; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    ${resultIcon}
-                    ${hasWater ? 'Water Detected!' : 'No Water Detected'}
-                </div>
-                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">Fill Level: ${percentage}%</p>
-                <p style="text-align: center; font-size: 0.875rem; color: var(--text-secondary); margin-top: 1rem; padding: 0.5rem; background-color: #f9fafb; border-radius: 0.5rem;"><b>Analysis:</b> ${reasoning}</p>
-            `;
-        }
-
-        function showErrorResult(message = 'Analysis failed. Please try again.') {
-            resultsContent.innerHTML = `
-                <div style="text-align: center; color: #e63946; font-weight: 700; font-size: 1.5rem;">
-                    Error
-                </div>
-                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">${message}</p>
-            `;
-        }
-
-        function analyzeImage() {
-            const file = fileInput.files?.[0];
-            if (!file) {
-                alert('Please upload an image first.');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            showAnalyzingState();
-
-            fetch('http://127.0.0.1:5000/analyze', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                showRealResult(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorResult();
-            });
-        }
-
-        function resetResults() {
-            resultsContent.innerHTML = `
-                <div class="results-placeholder">
-                    <div class="icon-wrapper">
-                        <svg class="icon" style="width: 2rem; height: 2rem; color: #9ca3af;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-                    </div>
-                    <p>Upload or capture an image to get started</p>
-                </div>
-            `;
-        }
-
-        // Attach the analyzeImage function to the "Analyze" button (you'll need to add this button to your HTML)
-        // For now, let's trigger analysis automatically after image upload for simplicity
-        fileInput.addEventListener('change', analyzeImage);
-
-    </script>
+</script>
 </body>
 </html>

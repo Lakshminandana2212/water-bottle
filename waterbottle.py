@@ -1,48 +1,38 @@
+# waterbottle4.py
 import cv2
 import numpy as np
 
+def estimate_water_level(image_path):
+    # Load image
+    image = cv2.imread(image_path)
+    if image is None:
+        return "Image not found!"
 
-# image_path = r"E:\waterbottledetector\waterbottle3.jpg" 
+    # Resize for consistent processing
+    image = cv2.resize(image, (400, 600))
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-img = cv2.imread(image_path)
+    # Threshold to isolate water (dark areas)
+    _, thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)
 
-if img is None:
-    print("Error: Image not found.")
-    exit()
+    # Find contours
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return "No contours found!"
 
+    # Assume largest contour is the bottle
+    largest_contour = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(largest_contour)
 
-resized = cv2.resize(img, (400, 600))  
-gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    # Crop the bottle region
+    bottle_roi = thresh[y:y+h, x:x+w]
 
+    # Count dark (black) pixels
+    total_pixels = bottle_roi.size
+    water_pixels = cv2.countNonZero(bottle_roi)
+    fill_percentage = int((water_pixels / total_pixels) * 100)
 
-edges = cv2.Canny(blurred, 50, 150)
-contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Limit to 0-100
+    fill_percentage = max(0, min(fill_percentage, 100))
 
-if not contours:
-    print("No contours found.")
-    exit()
-
-
-bottle_contour = max(contours, key=cv2.contourArea)
-x, y, w, h = cv2.boundingRect(bottle_contour)
-roi = resized[y:y+h, x:x+w]
-
-
-roi_gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-_, thresh = cv2.threshold(roi_gray, 100, 255, cv2.THRESH_BINARY_INV)
-
-
-heights = []
-for i in range(thresh.shape[0]):
-    row = thresh[i, :]
-    if cv2.countNonZero(row) > 0.5 * thresh.shape[1]:  
-        heights.append(i)
-
-if heights:
-    water_level = max(heights)
-    fill_ratio = (thresh.shape[0] - water_level) / thresh.shape[0]
-    percentage = fill_ratio * 100
-    print(f"Estimated water fill: {percentage:.2f}%")
-else:
-    print("Could not detect water level.")
+    return f"Estimated Water Level: {fill_percentage}%"
