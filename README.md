@@ -2,26 +2,25 @@
 <img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
 
-# [Project Name] 🎯
+# Water level detector for a transparent bottle 🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: Yeetcode
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Team Lead: Lakshmi Nandana R - Adi Shankara Institute Of Engineering and Technology
+- Member 2: Sreegovind R Kammath - Adi Shankara Institute Of Engineering and Technology
 
 ### Project Description
-[2-3 lines about what your project does]
+We implemented this project to check if there is any amount of water in a transparent bottle. You can upload images of your bottle and check if it has water or not!
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+We analyzed that modern society has become so dependent on digital interfaces that the analog task of looking through clear plastic to assess liquid levels has become cognitively overwhelming for 73% of smartphone users.
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+This clearly solves the problem stated above (hehe) as well as in a world where people constantly forget whether they've consumed adequate H2O, our revolutionary AI-powered water bottle detection system eliminates the devastating 0.3 seconds of uncertainty when glancing at your bottle. No longer will humanity suffer from the tragic affliction of 'visual water level assessment fatigue.
 
 ## Technical Details
 ### Technologies/Components Used
@@ -31,10 +30,6 @@ For Software:
 - [Libraries used]
 - [Tools used]
 
-For Hardware:
-- [List main components]
-- [List specifications]
-- [List tools required]
 
 ### Implementation
 For Software:
@@ -61,37 +56,16 @@ For Software:
 ![Workflow](Add your workflow/architecture diagram here)
 *Add caption explaining your workflow*
 
-For Hardware:
-
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
-
-# Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
-
-![Build](Add photos of build process here)
-*Explain the build steps*
-
-![Final](Add photo of final product here)
-*Explain the final build*
 
 ### Project Demo
 # Video
 [Add your demo video link here]
 *Explain what the video demonstrates*
 
-# Additional Demos
-[Add any extra demo materials/links]
 
 ## Team Contributions
 - [Name 1]: [Specific contributions]
 - [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
