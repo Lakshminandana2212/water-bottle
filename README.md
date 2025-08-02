@@ -25,41 +25,57 @@ This clearly solves the problem stated above (hehe) as well as in a world where 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
+- [Languages used]: Python
+- [Frameworks used]: PyQt5
+- [Libraries used]: OpenCV (cv2)
+    NumPy
+    PyQt5.QtWidgets
+    PyQt5.QtGui
+    PyQt5.QtCore
+- [Tools used]: Python 3.9.5
+    VS Code (or any Python IDE)
+    Command Line / Terminal
+    Qt Designer (optional)
+    Image files (JPG/PNG)
 
 
 
+### Implementation
+For Software:
+# Installation
+pip install pyqt5
+
+pip install opencv-python
+
+pip install numpy
+
+# Run
+python filename.py
 
 ### Project Documentation
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+https://drive.google.com/file/d/1WuUSvHPc0BoEHsD9qWkpIHRfQizAs3nM/view
+show water percentage
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+https://drive.google.com/file/d/1wfVJGDiyH9XSlbuNfseuKE7F0GTNVfZE/view
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
 
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
+https://drive.google.com/file/d/1OBbJSazJNlPEHduVGbZcBM5D0UOQy8bO/view
+
+
+
 
 
 ### Project Demo
 # Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
-
+https://drive.google.com/file/d/1yuIC_eyF1BO7qdD9PdP3dnkKa6RPRlmK/view
+video demonstrates how our project works,basically u upload a picture of  a water bottle,tells us if there is water or not
 
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
+- Lakshmi Nandana R: Backend implementation using python
+- [Name 2]: Frontend Implementation 
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
