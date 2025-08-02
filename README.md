@@ -31,13 +31,7 @@ For Software:
 - [Tools used]
 
 
-### Implementation
-For Software:
-# Installation
-[commands]
 
-# Run
-[commands]
 
 ### Project Documentation
 For Software:
